@@ -1,0 +1,64 @@
+create table dateme
+( UNAME        VARCHAR2(30) primary key,
+ PASSWORD      VARCHAR2(25) check(len(password)>=10),
+
+ EMAIL         VARCHAR2(40)
+);
+alter table dateme modify email varchar2(40);
+insert into dateme values
+(
+    '116cs0223',
+    'babulbabul',
+    'subham1998sahoo@gmail.com'
+);
+
+insert into dateme values
+(
+    '116cs0222',
+    'kulukamal123',
+    'kulukamal1998@gmail.com'
+);
+
+
+drop table user_details;
+create table user_details
+(
+    uname varchar2(30) references dateme(uname) primary key,
+    name varchar2(35) not null,
+    age number(4) check (age>=18 and age<=60),
+    gender varchar2(1) check(gender in ('M','F') ) not null,
+    DOB date not null,
+    city varchar2(20) ,
+    country varchar2(15) 
+);
+
+
+drop table log;
+create table log
+(
+    uname varchar2(40) references dateme(uname) primary key,
+    choice number(1)  default 0 check (choice in(0,1) )
+);
+
+insert into user_details values
+   (
+  '116cs0223',
+  'subham sahoo',
+  19,
+    '',
+    '12-jan-17',
+    'bbsr',
+    'india'
+   );
+
+drop trigger log_insert_dateme;
+
+create or replace trigger log_insert_dateme 
+after insert on dateme
+for each row
+declare
+a number:=1;
+begin
+   insert into log values(:new.uname,default);
+end;
+/
